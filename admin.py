@@ -3,7 +3,8 @@ from flask import Blueprint,redirect,url_for,request,render_template,flash,sessi
 from flask_sqlalchemy import Pagination
 from function import *
 from config import *
-from run import FetchData,path_list,GetName,CodeType,_remote_content,rd,has_item,AddResource
+from __init__ import *
+from views import *
 import os
 import io
 import re
@@ -57,6 +58,7 @@ def before_request():
 ########web console
 @admin.route('/web_console')
 def web_console():
+    return
     g = proc.Group()
     action=request.args.get('action')
     allow_action=['UpdateFile','UploadDir','Upload']
@@ -281,6 +283,7 @@ def logout():
 
 @admin.route('/reload',methods=['GET','POST'])
 def reload():
+    config_dir='/root/wbm'
     cmd='supervisorctl -c {} restart pyone'.format(os.path.join(config_dir,'supervisord.conf'))
     subprocess.Popen(cmd,shell=True)
     flash('正在重启网站...')
