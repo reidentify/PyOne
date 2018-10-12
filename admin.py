@@ -47,7 +47,20 @@ def set(key,value):
                 new_text=old_text+'\n\n{}="{}"'.format(key,value)
         f.write(new_text)
 
-
+def _remote_content(fileid):
+    kc='{}:content'.format(fileid)
+    if rd.exists(kc):
+        return rd.get(kc)
+    else:
+        downloadUrl=GetDownloadUrl(fileid)
+        if downloadUrl:
+            r=requests.get(downloadUrl)
+            r.encoding='utf-8'
+            content=r.content
+            rd.set(kc,content)
+            return content
+        else:
+            return False
 ############视图函数
 @admin.before_request
 def before_request():
